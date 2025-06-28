@@ -45,7 +45,7 @@ The pipeline is built to convert simple 2D sketch drawings of eyes and eyebrows 
 
 ## 🖼️ Visuals
 
-![Sketch2Rig Demo](Documentation/Sketch2RigML_06-20-2025.gif)
+![Sketch2Rig Demo](Documentation/Sketch2RigML_06-27-2025.gif)
 
 ---
 
