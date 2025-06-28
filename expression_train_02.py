@@ -1,3 +1,5 @@
+#Update 02
+
 import torch
 import torch.nn as nn
 import torch.optim as optim
@@ -25,39 +27,57 @@ class ExpressionDataset(Dataset):
             image = self.transform(image)
         return image, torch.tensor(label, dtype=torch.float32)
     
-#Creates a transform object that, when applied to an image, will first resize the image to __x__pixels 
-#and then convert it into a PyTorch tensor with scaled pixel values.
-#Preparing image data.
-transform = transforms.Compose(
-    [
-        transforms.Resize((64, 64)),
-        transforms.ToTensor(),
-        transforms.Normalize((0.5,), (0.5,))
-    ]
-)
+#Preparing image data. Enhance model robustness and prevent overfitting.
+#Simulate real-world drawing inconsistencies and add beneficial randomness to the training process.
+train_transform = transforms.Compose([
+    transforms.Resize((128, 128)),
+    transforms.RandomAffine(degrees=15, translate=(0.2, 0.2), scale=(0.85, 1.15)),
+    transforms.RandomPerspective(distortion_scale=0.2, p=0.3),
+    transforms.ColorJitter(brightness=0.2, contrast=0.2),
+    transforms.ToTensor(),
+    transforms.Normalize((0.5,), (0.5,))
+])
 
-dataset = ExpressionDataset("labels_01.csv", "images", transform)
-dataloader = DataLoader (dataset, batch_size=128, shuffle=True)
+val_transform = transforms.Compose([
+    transforms.Resize((128, 128)),
+    transforms.ToTensor(),
+    transforms.Normalize((0.5,), (0.5,))
+])
+
+train_dataset = ExpressionDataset("train_labels_01.csv", "images", train_transform)
+val_dataset = ExpressionDataset("val_labels_01.csv", "images", val_transform)
+
+train_loader = DataLoader(train_dataset, batch_size=128, shuffle=True)
+val_loader = DataLoader(val_dataset, batch_size=128, shuffle=False)
 
 #Defines CNN Model.
-class ExpressionNet (nn.Module):
+class ExpressionNetV2 (nn.Module):
     def __init__(self):
-        super(ExpressionNet, self).__init__()
+        super(ExpressionNetV2, self).__init__()
         self.conv = nn.Sequential (
-            nn.Conv2d(1, 16, 3, padding = 1),        #nn.Conv2d(in_channels, out_channels, kernel_size, padding)
+            nn.Conv2d(1, 32, 5, padding = 1),        #nn.Conv2d(in_channels, out_channels, kernel_size, padding)
             nn.ReLU(),
             nn.MaxPool2d(2),
 
-            nn.Conv2d(16, 32, 3, padding = 1),
+            nn.Conv2d(32, 64, 5, padding = 1),
+            nn.ReLU(),
+            nn.MaxPool2d(2),
+
+            nn.Conv2d(64, 128, 3, padding = 1),
+            nn.ReLU(),
+            nn.MaxPool2d(2),
+
+            nn.Conv2d(128, 256, 3, padding = 1),
             nn.ReLU(),
             nn.MaxPool2d(2),
         )
+        
         self.fc = nn.Sequential (
             nn.Flatten(),
-            nn.Linear(32*16*16, 128),               #nn.linear(batch_size, channels, height, width)
+            nn.Linear(256*7*7, 512),               #nn.linear(batch_size, channels, height, width)
             nn.ReLU(),
-            nn.Dropout(0.3),                        #Prevents Overfitting
-            nn.Linear(128,18),
+            nn.Dropout(0.2),                        #Prevents Overfitting
+            nn.Linear(512,18),
         )
 
 #Forward Pass - Passes data through network.
@@ -65,21 +85,23 @@ class ExpressionNet (nn.Module):
         x = self.conv(x)
         x = self.fc(x)
         return x
-    
+
 #Allows Model Training to be done in GPU or CPU
 device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
-model = ExpressionNet().to(device)
-    
+model = ExpressionNetV2().to(device)
+
 #Optimization - Uses Adam Optimizer in PyTorch.  
 #Used to update the parameters of the neural network model during training.
-optimizer = optim.Adam(model.parameters(), lr=0.0001)
+optimizer = optim.Adam(model.parameters(), lr=1e-4)
 criterion = nn.MSELoss()
 
+#Training loop with validation
 #Model Training loop
-num_epoch = 100
+num_epoch = 800
 for epoch in range (num_epoch):
+    model.train()
     running_loss = 0.0
-    for imgs, labels in dataloader:  # Loop over batches
+    for imgs, labels in train_loader:  # Loop over batches
         # Move data to the appropriate device (CPU or GPU)
         imgs, labels = imgs.to(device), labels.to(device)
         #Forwards Pass to get output
@@ -92,9 +114,20 @@ for epoch in range (num_epoch):
         #Update Weights
         optimizer.step()            #Updating parameters
         #Print Progress
-
         running_loss += loss.item()
-    print(f"Epoch {epoch+1}, Loss: {running_loss:.4f}")
+
+ #Validation
+    model.eval()
+    val_loss = 0.0
+    with torch.no_grad():
+        for imgs, labels in val_loader:
+            imgs, labels = imgs.to(device), labels.to(device)
+            outputs = model(imgs)
+            loss = criterion(outputs, labels)
+            val_loss += loss.item()
+
+    print(f"Epoch {epoch+1}, Train Loss: {running_loss:.4f}, Val Loss: {val_loss:.4f}")
+
 
 torch.save(model.state_dict(), "expression_model_01.pth")
 print("✅ Model saved.")
