@@ -44,14 +44,7 @@ Sketch2Rig is a pipeline that takes 2D sketch drawings of eyes and eyebrows and 
 📁 3DModel/                         # Houdini scene file with rig
 📁 Documentation/                  # Gifs and images for documentation
 │   ├── GIFs/
-│   │   └── Sketch2Rig_07-01-2025.gif
 │   └── Photos/
-│       ├── Input_Angry_01.jpg
-│       ├── Output_Angry_01.png
-│       ├── Input_Happy_01.jpg
-│       ├── Output_Happy_01.png
-│       ├── Input_Sad_01.jpg
-│       └── Output_Sad_01.png
 📁 images/                         # Training images (used by training script)
 📁 inference/                      # Test sketches for inference
 📄 labels_02.csv                   # CSV of 18 slider values for each training image
@@ -64,8 +57,8 @@ Sketch2Rig is a pipeline that takes 2D sketch drawings of eyes and eyebrows and 
 
 ## 🖼️ Visuals
 
-### ✅ Inference Demo (Latest - 06-27-2025)
-![Sketch2Rig Demo](Documentation/Sketch2Rig_07-21-2025.gif)
+### ✅ Inference Demo
+![Sketch2Rig Demo](Documentation/GIFs/Sketch2Rig_07-21-2025.gif)
 
 ---
 
