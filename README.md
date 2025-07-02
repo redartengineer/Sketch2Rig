@@ -62,28 +62,24 @@ Sketch2Rig is a pipeline that takes 2D sketch drawings of eyes and eyebrows and 
 📄 README.md
 ```
 
----
-
 ## 🖼️ Visuals
 
-### ✅ Inference Demo (07-01-2025)
-
-A looping animation (GIF) demonstrates how hand-drawn expressions influence the Houdini rig in real-time:
-
-```
-Documentation/GIFs/Sketch2Rig_07-01-2025.gif
-```
-
-### Example Sketch to Rig Output
-
-| Sketch Input | Houdini Output |
-| ------------ | -------------- |
-|              |                |
-|              |                |
-|              |                |
+### ✅ Inference Demo (Latest - 06-27-2025)
+![Sketch2Rig Demo](Documentation/Sketch2Rig_07-21-2025.gif)
 
 ---
 
+## Example Sketch to Rig Output
+
+This table shows the sketch input on the left and the generated 3D rig output on the right using our trained model.
+
+| Sketch Input | Houdini Output |
+|--------------|----------------|
+| <div align="center"><img src="Documentation/Photos/Input_Angry_01.jpg" width="200"/><br/>Angry Sketch</div> | <div align="center"><img src="Documentation/Photos/Output_Angry_01.png" width="200"/><br/>Angry Rig</div> |
+| <div align="center"><img src="Documentation/Photos/Input_Happy_01.jpg" width="200"/><br/>Happy Sketch</div> | <div align="center"><img src="Documentation/Photos/Output_Happy_01.png" width="200"/><br/>Happy Rig</div> |
+| <div align="center"><img src="Documentation/Photos/Input_Sad_01.jpg" width="200"/><br/>Sad Sketch</div> | <div align="center"><img src="Documentation/Photos/Output_Sad_01.png" width="200"/><br/>Sad Rig</div> |
+
+---
 ## 🚀 Getting Started
 
 1. **Prepare a test sketch**
