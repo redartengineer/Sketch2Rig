@@ -52,6 +52,7 @@ Sketch2Rig is a pipeline that takes 2D sketch drawings of eyes and eyebrows and 
 📄 expression_train_06.02.02.py    # Training script
 📄 expression_infer_06.02.02.py    # Inference script
 📄 expresssion_insert_to_houdini_pythonshell_02.py  # Houdini integration script
+📄 LICENSE                         # MIT License
 📄 README.md
 ```
 
