@@ -58,7 +58,7 @@ Sketch2Rig is a pipeline that takes 2D sketch drawings of eyes and eyebrows and 
 ## 🖼️ Visuals
 
 ### ✅ Inference Demo
-![Sketch2Rig Demo](Documentation/GIFs/Sketch2Rig_07-21-2025.gif)
+![Sketch2Rig Demo](Documentation/GIFs/Sketch2Rig_07-01-2025.gif)
 
 ---
 
